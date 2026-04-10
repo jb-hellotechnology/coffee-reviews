@@ -7,6 +7,7 @@
                     {{ $venue->name }}
                 </h2>
                 <p class="text-sm text-gray-500 mt-0.5">{{ $venue->address }}</p>
+                <p class="text-sm text-gray-500 mt-0.5"><a href="{{ $venue->website }}" class="font-medium text-fg-brand underline hover:no-underline">{{ $venue->website }}</a></p>
             </div>
             @auth
                 @if(App\Models\Review::userCanReviewVenue(auth()->user(), $venue))
