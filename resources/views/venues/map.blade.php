@@ -8,6 +8,8 @@
 
     @push('styles')
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css"/>
         <style>
             #map { height: calc(100vh - 120px); width: 100%; }
         </style>
@@ -37,6 +39,7 @@
 
     @push('scripts')
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
         <script>
             const venues = @json($venues);
 
@@ -86,6 +89,37 @@
                 });
             }
 
+            // Create a marker cluster group
+            const markers = L.markerClusterGroup({
+                maxClusterRadius: 60,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
+                zoomToBoundsOnClick: true,
+                iconCreateFunction: function(cluster) {
+                    const count = cluster.getChildCount();
+                    return L.divIcon({
+                        className: '',
+                        html: `<div style="
+                            width: 40px;
+                            height: 40px;
+                            background: #4f46e5;
+                            border: 2px solid white;
+                            border-radius: 50%;
+                            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 13px;
+                            font-weight: 700;
+                            color: white;
+                            cursor: pointer;
+                        ">${count}</div>`,
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20],
+                    });
+                }
+            });
+
             venues.forEach(venue => {
                 const score = parseFloat(venue.coffee_score) || 0;
 
@@ -114,10 +148,12 @@
                     </div>
                 `;
 
-                L.marker([venue.lat, venue.lng], { icon: makeIcon(score) })
-                    .addTo(map)
-                    .bindPopup(popup, { maxWidth: 220 });
+                const marker = L.marker([venue.lat, venue.lng], { icon: makeIcon(score) });
+                marker.bindPopup(popup, { maxWidth: 220 });
+                markers.addLayer(marker);
             });
+
+            map.addLayer(markers);
 
             if (venues.length > 1) {
                 const bounds = L.latLngBounds(venues.map(v => [v.lat, v.lng]));
