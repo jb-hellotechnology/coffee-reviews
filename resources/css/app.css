@@ -20,7 +20,7 @@ input, select, textarea {
 }
 
 #map{
-    z-index:-1;
+    z-index:0;
     position: relative;
 }
 
