@@ -67,7 +67,7 @@ class VenueSearch extends Component
                     default => $q->orderByDesc('coffee_score'),
                 }
             )
-            ->paginate(20);
+            ->paginate(18);
 
         return view('livewire.venue-search', compact('venues', 'cities'));
     }
