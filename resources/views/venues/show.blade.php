@@ -47,12 +47,12 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- Score summary card --}}
             <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <div class="flex items-center gap-6">
-                    <div class="text-center">
+                <div class="flex flex-col sm:flex-row items-center gap-6">
+                    <div class="text-center shrink-0">
                         <div class="text-5xl font-bold text-indigo-600">
                             {{ number_format($venue->coffee_score, 1) }}
                         </div>
@@ -62,7 +62,6 @@
                             {{ Str::plural('review', $venue->review_count) }}
                         </div>
                     </div>
-
                     {{-- Per-dimension averages --}}
                     @php
                         $allScores = $venue->reviews->map->scores->filter();
@@ -77,9 +76,8 @@
                             'value'             => 'Value',
                         ];
                     @endphp
-
                     @if($allScores->isNotEmpty())
-                        <div class="flex-1 grid grid-cols-2 gap-x-6 gap-y-2">
+                        <div class="flex-1 w-full grid grid-cols-2 gap-x-6 gap-y-2">
                             @foreach($dimensions as $field => $label)
                                 @php
                                     $avg = $allScores->whereNotNull($field)->avg($field);
@@ -88,7 +86,7 @@
                                     <div class="flex items-center justify-between gap-2">
                                         <span class="text-xs text-gray-500">{{ $label }}</span>
                                         <div class="flex items-center gap-1">
-                                            <div class="w-16 bg-gray-100 rounded-full h-1.5">
+                                            <div class="w-8 bg-gray-100 rounded-full h-1.5">
                                                 <div class="bg-amber-400 h-1.5 rounded-full"
                                                      style="width: {{ ($avg / 5) * 100 }}%"></div>
                                             </div>
@@ -114,7 +112,7 @@
 
             {{-- Reviews --}}
             <div>
-                <h3 class="text-base font-medium text-gray-900 mb-3">Reviews</h3>
+                <h3 class="text-base font-medium text-gray-900 mb-3 mt-8">Reviews</h3>
 
                 @forelse($venue->reviews->sortByDesc('created_at') as $review)
                     <div class="bg-white rounded-lg border border-gray-200 p-5 mb-3">

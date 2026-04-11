@@ -17,7 +17,7 @@
     </x-slot>
 
     <div class="py-10">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
             @if($roasters->isEmpty())
                 <div class="bg-white rounded-2xl border border-gray-200 p-16 text-center">
