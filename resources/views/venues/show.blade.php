@@ -221,7 +221,7 @@
                 "@type": "Review",
                 "author": {
                     "@type": "Person",
-                    "name": @json($review->user->name),
+                    "name": @json($review->user->name)
                 },
                 "datePublished": "{{ $review->created_at->toIso8601String() }}",
                 "reviewBody": @json(Str::limit($review->body, 500))
