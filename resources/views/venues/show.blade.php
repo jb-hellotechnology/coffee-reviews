@@ -182,61 +182,61 @@
 
         </div>
     </div>
+    @push('scripts')
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CafeOrCoffeeShop",
+        "name": "{{ addslashes($venue->name) }}",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "{{ addslashes($venue->address) }}",
+            "addressLocality": "{{ addslashes($venue->city) }}",
+            "postalCode": "{{ $venue->postcode }}",
+            "addressCountry": "GB"
+        },
+        @if($venue->phone)
+        "telephone": "{{ $venue->phone }}",
+        @endif
+        @if($venue->website)
+        "url": "{{ $venue->website }}",
+        @endif
+        @if($venue->lat && $venue->lng)
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": {{ $venue->lat }},
+            "longitude": {{ $venue->lng }}
+        },
+        @endif
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "{{ number_format($venue->coffee_score, 1) }}",
+            "bestRating": "5",
+            "worstRating": "1",
+            "ratingCount": "{{ $venue->review_count }}"
+        },
+        "review": [
+            @foreach($venue->reviews->sortByDesc('created_at')->take(10) as $index => $review)
+            {
+                "@type": "Review",
+                "author": {
+                    "@type": "Person",
+                    "name": "{{ addslashes($review->user->name) }}"
+                },
+                "datePublished": "{{ $review->created_at->toIso8601String() }}",
+                "reviewBody": "{{ addslashes(Str::limit($review->body, 500)) }}"
+                @if($review->scores && $review->scores->overall > 0)
+                ,"reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": "{{ number_format($review->scores->overall, 1) }}",
+                    "bestRating": "5",
+                    "worstRating": "1"
+                }
+                @endif
+            }{{ !$loop->last ? ',' : '' }}
+            @endforeach
+        ]
+    }
+    </script>
+    @endpush
 </x-app-layout>
-@push('scripts')
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "CafeOrCoffeeShop",
-    "name": "{{ addslashes($venue->name) }}",
-    "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "{{ addslashes($venue->address) }}",
-        "addressLocality": "{{ addslashes($venue->city) }}",
-        "postalCode": "{{ $venue->postcode }}",
-        "addressCountry": "GB"
-    },
-    @if($venue->phone)
-    "telephone": "{{ $venue->phone }}",
-    @endif
-    @if($venue->website)
-    "url": "{{ $venue->website }}",
-    @endif
-    @if($venue->lat && $venue->lng)
-    "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": {{ $venue->lat }},
-        "longitude": {{ $venue->lng }}
-    },
-    @endif
-    "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "{{ number_format($venue->coffee_score, 1) }}",
-        "bestRating": "5",
-        "worstRating": "1",
-        "ratingCount": "{{ $venue->review_count }}"
-    },
-    "review": [
-        @foreach($venue->reviews->sortByDesc('created_at')->take(10) as $index => $review)
-        {
-            "@type": "Review",
-            "author": {
-                "@type": "Person",
-                "name": "{{ addslashes($review->user->name) }}"
-            },
-            "datePublished": "{{ $review->created_at->toIso8601String() }}",
-            "reviewBody": "{{ addslashes(Str::limit($review->body, 500)) }}"
-            @if($review->scores && $review->scores->overall > 0)
-            ,"reviewRating": {
-                "@type": "Rating",
-                "ratingValue": "{{ number_format($review->scores->overall, 1) }}",
-                "bestRating": "5",
-                "worstRating": "1"
-            }
-            @endif
-        }{{ !$loop->last ? ',' : '' }}
-        @endforeach
-    ]
-}
-</script>
-@endpush

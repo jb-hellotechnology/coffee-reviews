@@ -158,43 +158,43 @@
             @endif
         </div>
     </div>
+    @push('scripts')
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Best Coffee Shops in {{ $cityName }}",
+        "description": "Top rated coffee shops in {{ $cityName }}, ranked by coffee quality score.",
+        "numberOfItems": {{ $venues->count() }},
+        "itemListElement": [
+            @foreach($venues as $index => $venue)
+            {
+                "@type": "ListItem",
+                "position": {{ $index + 1 }},
+                "item": {
+                    "@type": "CafeOrCoffeeShop",
+                    "name": "{{ addslashes($venue->name) }}",
+                    "url": "{{ route('venues.show', $venue) }}",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": "{{ addslashes($venue->address) }}",
+                        "addressLocality": "{{ $cityName }}",
+                        "addressCountry": "GB"
+                    }
+                    @if($venue->coffee_score > 0)
+                    ,"aggregateRating": {
+                        "@type": "AggregateRating",
+                        "ratingValue": "{{ number_format($venue->coffee_score, 1) }}",
+                        "bestRating": "5",
+                        "worstRating": "1",
+                        "ratingCount": "{{ $venue->review_count }}"
+                    }
+                    @endif
+                }
+            }{{ !$loop->last ? ',' : '' }}
+            @endforeach
+        ]
+    }
+    </script>
+    @endpush
 </x-app-layout>
-@push('scripts')
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "name": "Best Coffee Shops in {{ $cityName }}",
-    "description": "Top rated coffee shops in {{ $cityName }}, ranked by coffee quality score.",
-    "numberOfItems": {{ $venues->count() }},
-    "itemListElement": [
-        @foreach($venues as $index => $venue)
-        {
-            "@type": "ListItem",
-            "position": {{ $index + 1 }},
-            "item": {
-                "@type": "CafeOrCoffeeShop",
-                "name": "{{ addslashes($venue->name) }}",
-                "url": "{{ route('venues.show', $venue) }}",
-                "address": {
-                    "@type": "PostalAddress",
-                    "streetAddress": "{{ addslashes($venue->address) }}",
-                    "addressLocality": "{{ $cityName }}",
-                    "addressCountry": "GB"
-                }
-                @if($venue->coffee_score > 0)
-                ,"aggregateRating": {
-                    "@type": "AggregateRating",
-                    "ratingValue": "{{ number_format($venue->coffee_score, 1) }}",
-                    "bestRating": "5",
-                    "worstRating": "1",
-                    "ratingCount": "{{ $venue->review_count }}"
-                }
-                @endif
-            }
-        }{{ !$loop->last ? ',' : '' }}
-        @endforeach
-    ]
-}
-</script>
-@endpush
