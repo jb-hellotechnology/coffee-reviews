@@ -1,5 +1,6 @@
 <x-app-layout>
     <x-slot name="title">{{ $venue->name }} | {{ $venue->city }}</x-slot>
+    <x-slot name="description">{{ $venue->name }} in {{ $venue->city }} — read coffee reviews and see scores for espresso, bean sourcing, milk work and more.</x-slot>
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>

@@ -1,5 +1,6 @@
 <x-app-layout>
-    <x-slot name="title">Map</x-slot>
+    <x-slot name="title">Find Coffee Shops Near You</x-slot>
+    <x-slot name="description">Discover the best coffee shops near you using our interactive map. Read reviews and plan your next coffee adventure!</x-slot>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">Map</h2>
     </x-slot>

@@ -4,7 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{ isset($title) ? $title . ' — Coffee Shop Reviews' : 'Coffee Shop Reviews' }}</title>
+        <title>{!! isset($title) ? e(html_entity_decode($title, ENT_QUOTES, 'UTF-8')) . ' — Coffee Shop Reviews' : 'Coffee Shop Reviews - Find the Best Coffee Near You' !!}</title>
+        <meta name="description" content="{{ $description ?? 'Find the best coffee shops near you. Crowd-sourced reviews from coffee fans scored on espresso, bean sourcing, equipment and more.' }}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -54,5 +55,9 @@
 
         @livewireScripts
         @stack('scripts')
+
+        <!-- Fathom - beautiful, simple website analytics -->
+        <script src="https://cdn.usefathom.com/script.js" data-site="OSJCOSOY" defer></script>
+        <!-- / Fathom -->
     </body>
 </html>
