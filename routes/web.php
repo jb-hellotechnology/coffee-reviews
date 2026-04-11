@@ -10,7 +10,15 @@ use App\Http\Controllers\AdminController;
 // Public routes
 Route::get('/', [VenueController::class, 'index'])->name('venues.index');
 Route::get('/map', [VenueController::class, 'map'])->name('venues.map');
+Route::get('/coffee-shops/{city}', [VenueController::class, 'city'])->name('venues.city');
 Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+Route::get('/sitemap.xml', function () {
+    $venues = App\Models\Venue::all();
+    $cities = App\Models\Venue::select('city')->distinct()->pluck('city');
+
+    return response()->view('sitemap', compact('venues', 'cities'))
+        ->header('Content-Type', 'application/xml');
+})->name('sitemap');
 
 // Auth required
 Route::middleware('auth')->group(function () {

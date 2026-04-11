@@ -47,4 +47,32 @@ class VenueController extends Controller
 
         return view('venues.map', compact('venues'));
     }
+
+    public function city(string $city): View
+    {
+        $venues = Venue::query()
+            ->whereRaw('LOWER(city) = ?', [strtolower($city)])
+            ->with(['reviews.scores'])
+            ->orderByDesc('coffee_score')
+            ->get();
+
+        if ($venues->isEmpty() && !Venue::whereRaw('LOWER(city) = ?', [strtolower($city)])->exists()) {
+            abort(404);
+        }
+
+        $cityName = $venues->first()?->city ?? ucfirst($city);
+
+        $dimensions = [
+            'espresso'          => 'Espresso',
+            'milk_work'         => 'Milk work',
+            'filter_options'    => 'Filter',
+            'bean_sourcing'     => 'Bean sourcing',
+            'barista_knowledge' => 'Barista knowledge',
+            'equipment'         => 'Equipment',
+            'decaf_available'   => 'Decaf',
+            'value'             => 'Value',
+        ];
+
+        return view('venues.city', compact('venues', 'cityName', 'dimensions'));
+    }
 }

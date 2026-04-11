@@ -109,7 +109,9 @@
                                                group-hover:text-indigo-600 transition-colors truncate">
                                         {{ $venue->name }}
                                     </h3>
-                                    <p class="text-sm text-gray-400 mt-0.5">{{ $venue->city }}</p>
+                                    <p class="text-sm text-gray-400 mt-0.5">
+                                        {{ $venue->city }}
+                                    </p>
                                 </div>
                                 <div class="shrink-0 text-right">
                                     @if($venue->coffee_score > 0)

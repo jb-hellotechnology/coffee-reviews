@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="title">{{ $venue->name }}</x-slot>
+    <x-slot name="title">{{ $venue->name }} | {{ $venue->city }}</x-slot>
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
@@ -7,6 +7,10 @@
                     {{ $venue->name }}
                 </h2>
                 <p class="text-sm text-gray-500 mt-0.5">{{ $venue->address }}</p>
+                <p class="text-sm text-gray-500 mt-0.5"><a href="{{ route('venues.city', Str::slug($venue->city)) }}"
+                   class="text-sm text-indigo-600 hover:underline">
+                    {{ $venue->city }}
+                </a></p>
                 <p class="text-sm text-gray-500 mt-0.5"><a href="{{ $venue->website }}" class="font-medium text-fg-brand underline hover:no-underline">{{ $venue->website }}</a></p>
             </div>
             @auth
