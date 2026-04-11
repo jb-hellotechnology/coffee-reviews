@@ -12,19 +12,36 @@
                     {{ $venue->city }}
                 </a></p>
                 <p class="text-sm text-gray-500 mt-0.5"><a href="{{ $venue->website }}" class="font-medium text-fg-brand underline hover:no-underline">{{ $venue->website }}</a></p>
+                @if($venue->roaster)
+                    <p class="text-sm text-gray-500 mt-1">
+                        Roaster:
+                        <a href="{{ route('roasters.show', $venue->roaster) }}"
+                           class="text-indigo-600 hover:underline font-medium">
+                            {{ $venue->roaster->name }}
+                        </a>
+                    </p>
+                @endif
             </div>
             @auth
-                @if(App\Models\Review::userCanReviewVenue(auth()->user(), $venue))
-                    <a href="{{ route('reviews.create', $venue) }}"
-                       class="px-4 py-2 !bg-indigo-600 !text-white text-sm rounded-md">
-                        Write a review
-                    </a>
-                @else
-                    @php $nextDate = App\Models\Review::userNextReviewDate(auth()->user(), $venue); @endphp
-                    <span class="text-sm text-gray-400">
-                        You can review again after {{ $nextDate->format('j F Y') }}
-                    </span>
-                @endif
+                <div class="flex items-center gap-3">
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('venues.edit', $venue) }}"
+                           class="px-4 py-2 border border-gray-200 text-sm font-medium text-gray-600 rounded-lg hover:border-indigo-300 hover:text-indigo-600 transition-colors">
+                            Edit venue
+                        </a>
+                    @endif
+                    @if(App\Models\Review::userCanReviewVenue(auth()->user(), $venue))
+                        <a href="{{ route('reviews.create', $venue) }}"
+                           class="px-4 py-2 !bg-indigo-600 !text-white text-sm rounded-lg">
+                            Write a review
+                        </a>
+                    @else
+                        @php $nextDate = App\Models\Review::userNextReviewDate(auth()->user(), $venue); @endphp
+                        <span class="text-sm text-gray-400">
+                            You can review again after {{ $nextDate->format('j F Y') }}
+                        </span>
+                    @endif
+                </div>
             @endauth
         </div>
     </x-slot>

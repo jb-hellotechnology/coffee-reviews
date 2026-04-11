@@ -97,6 +97,24 @@
 
             </div>
 
+            @if($formVisible)
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Roaster (optional)</label>
+                    <select wire:model="roasterId"
+                            class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Unknown / not listed</option>
+                        @foreach($roasters as $roaster)
+                            <option value="{{ $roaster->id }}">{{ $roaster->name }}</option>
+                        @endforeach
+                    </select>
+                    <p class="mt-1 text-xs text-gray-400">
+                        Can't find the roaster?
+                        <a href="{{ route('roasters.create') }}" class="text-indigo-600 hover:underline">Add them first</a>
+                        then come back.
+                    </p>
+                </div>
+            @endif
+
             <div class="mt-6 flex justify-end">
                 <button
                     wire:click="save"

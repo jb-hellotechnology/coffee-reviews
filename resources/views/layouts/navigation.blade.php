@@ -23,6 +23,13 @@
                             {{ $label }}
                         </a>
                     @endforeach
+                    <a href="{{ route('roasters.index') }}"
+                       class="px-3 py-2 rounded-md text-sm font-medium transition-colors
+                           {{ request()->routeIs('roasters.*')
+                               ? 'bg-gray-100 text-gray-900'
+                               : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50' }}">
+                        Roasters
+                    </a>
                     @auth
                         <a href="{{ route('venues.create') }}"
                            class="px-3 py-2 rounded-md text-sm font-medium transition-colors
@@ -111,6 +118,9 @@
         <div class="px-4 py-3 space-y-1">
             <x-responsive-nav-link href="{{ route('venues.index') }}" :active="request()->routeIs('venues.index')">
                 Coffee shops
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('roasters.index') }}" :active="request()->routeIs('roasters.*')">
+                Roasters
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('venues.map') }}" :active="request()->routeIs('venues.map')">
                 Map

@@ -34,7 +34,7 @@
                         <div class="flex items-center gap-2">
                             <span class="text-lg">☕</span>
                             <span class="font-display font-bold text-gray-900 text-sm tracking-tight">
-                                Best Coffee
+                                Coffee Shop Reviews
                             </span>
                         </div>
                         <p class="text-xs text-gray-400">

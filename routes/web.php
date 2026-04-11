@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VenueController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RoasterController;
 
 // Public routes
 Route::get('/', [VenueController::class, 'index'])->name('venues.index');
@@ -19,6 +20,7 @@ Route::get('/sitemap.xml', function () {
     return response()->view('sitemap', compact('venues', 'cities'))
         ->header('Content-Type', 'application/xml');
 })->name('sitemap');
+Route::get('/roasters', [RoasterController::class, 'index'])->name('roasters.index');
 
 // Auth required
 Route::middleware('auth')->group(function () {
@@ -29,13 +31,18 @@ Route::middleware('auth')->group(function () {
 
     // Venues — create must come before {venue} to avoid slug conflict
     Route::get('/venues/create', [VenueController::class, 'create'])->name('venues.create');
+    Route::get('/venues/{venue}/edit', [VenueController::class, 'edit'])->name('venues.edit');
+    Route::patch('/venues/{venue}', [VenueController::class, 'update'])->name('venues.update');
 
     // Reviews
     Route::get('/venues/{venue}/review', [ReviewController::class, 'create'])->name('reviews.create');
     Route::get('/my-reviews', [ReviewController::class, 'myReviews'])->name('my.reviews');
+
+    // Roasters
+    Route::get('/roasters/create', [RoasterController::class, 'create'])->name('roasters.create');
 });
 
-// Venue show — after auth group so /venues/create isn't swallowed by {venue}
+Route::get('/roasters/{roaster}', [RoasterController::class, 'show'])->name('roasters.show');
 Route::get('/venues/{venue}', [VenueController::class, 'show'])->name('venues.show');
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

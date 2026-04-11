@@ -29,6 +29,9 @@ class VenueCreate extends Component
     public bool $formVisible = false;
     public bool $saved = false;
 
+    // Roaster
+    public ?string $roasterId = null;
+
     protected array $rules = [
         'name'     => 'required|string|max:255',
         'address'  => 'required|string|max:255',
@@ -38,6 +41,7 @@ class VenueCreate extends Component
         'website'  => 'nullable|url|max:255',
         'lat'      => 'required|numeric',
         'lng'      => 'required|numeric',
+        'roasterId' => 'nullable|exists:roasters,id',
     ];
 
     public function lookupFromUrl(): void
@@ -107,6 +111,7 @@ class VenueCreate extends Component
             'website'         => $this->website,
             'lat'             => $this->lat,
             'lng'             => $this->lng,
+            'roaster_id'      => $roasterId ?: null,
         ]);
 
         $this->saved = true;
@@ -114,6 +119,7 @@ class VenueCreate extends Component
 
     public function render()
     {
-        return view('livewire.venue-create');
+        $roasters = \App\Models\Roaster::orderBy('name')->get(['id', 'name']);
+        return view('livewire.venue-create', compact('roasters'));
     }
 }

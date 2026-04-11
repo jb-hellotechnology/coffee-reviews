@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Venue;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class VenueController extends Controller
 {
@@ -74,5 +75,38 @@ class VenueController extends Controller
         ];
 
         return view('venues.city', compact('venues', 'cityName', 'dimensions'));
+    }
+
+    public function edit(Venue $venue): View
+    {
+        $roasters = \App\Models\Roaster::orderBy('name')->get(['id', 'name']);
+        return view('venues.edit', compact('venue', 'roasters'));
+    }
+
+    public function update(Request $request, Venue $venue): RedirectResponse
+    {
+        $request->validate([
+            'name'       => 'required|string|max:255',
+            'address'    => 'required|string|max:255',
+            'city'       => 'required|string|max:100',
+            'postcode'   => 'nullable|string|max:20',
+            'phone'      => 'nullable|string|max:30',
+            'website'    => 'nullable|url|max:255',
+            'roaster_id' => 'nullable|exists:roasters,id',
+        ]);
+
+        $venue->update([
+            'name'       => $request->name,
+            'address'    => $request->address,
+            'city'       => $request->city,
+            'postcode'   => $request->postcode,
+            'phone'      => $request->phone,
+            'website'    => $request->website,
+            'roaster_id' => $request->roaster_id ?: null,
+        ]);
+
+        return redirect()
+            ->route('venues.show', $venue)
+            ->with('success', 'Venue updated successfully.');
     }
 }
