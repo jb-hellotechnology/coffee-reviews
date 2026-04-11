@@ -1,9 +1,7 @@
 <x-app-layout>
     <x-slot name="title">Map</x-slot>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Map
-        </h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Map</h2>
     </x-slot>
 
     @push('styles')
@@ -16,7 +14,6 @@
     @endpush
 
     <div style="position: relative;">
-
         <div id="map"></div>
 
         {{-- Legend --}}
@@ -34,7 +31,6 @@
                 <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:#4ade80;"></span> 4–5
             </div>
         </div>
-
     </div>
 
     @push('scripts')
@@ -42,20 +38,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
         <script>
             const venues = @json($venues);
-
-            const defaultLat = venues.length
-                ? venues.reduce((s, v) => s + parseFloat(v.lat), 0) / venues.length
-                : 54.0;
-            const defaultLng = venues.length
-                ? venues.reduce((s, v) => s + parseFloat(v.lng), 0) / venues.length
-                : -2.0;
-
-            const map = L.map('map').setView([defaultLat, defaultLng], 6);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                maxZoom: 19,
-            }).addTo(map);
 
             function markerColour(score) {
                 if (score >= 4) return '#4ade80';
@@ -89,8 +71,16 @@
                 });
             }
 
-            // Create a marker cluster group
-            const markers = L.markerClusterGroup({
+            // Initialise map
+            const map = L.map('map').setView([54.0, -2.0], 6);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19,
+            }).addTo(map);
+
+            // Marker cluster group
+            const markerCluster = L.markerClusterGroup({
                 maxClusterRadius: 60,
                 spiderfyOnMaxZoom: true,
                 showCoverageOnHover: false,
@@ -120,17 +110,14 @@
                 }
             });
 
+            // Plot all venue markers
             venues.forEach(venue => {
                 const score = parseFloat(venue.coffee_score) || 0;
 
                 const popup = `
                     <div style="min-width: 180px; font-family: sans-serif;">
-                        <p style="font-weight: 600; font-size: 14px; margin: 0 0 2px;">
-                            ${venue.name}
-                        </p>
-                        <p style="font-size: 12px; color: #6b7280; margin: 0 0 8px;">
-                            ${venue.city}
-                        </p>
+                        <p style="font-weight: 600; font-size: 14px; margin: 0 0 2px;">${venue.name}</p>
+                        <p style="font-size: 12px; color: #6b7280; margin: 0 0 8px;">${venue.city}</p>
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                             <span style="font-size: 12px; color: #6b7280;">
                                 ${venue.review_count} ${venue.review_count === 1 ? 'review' : 'reviews'}
@@ -150,16 +137,36 @@
 
                 const marker = L.marker([venue.lat, venue.lng], { icon: makeIcon(score) });
                 marker.bindPopup(popup, { maxWidth: 220 });
-                markers.addLayer(marker);
+                markerCluster.addLayer(marker);
             });
 
-            map.addLayer(markers);
+            map.addLayer(markerCluster);
 
-            if (venues.length > 1) {
-                const bounds = L.latLngBounds(venues.map(v => [v.lat, v.lng]));
-                map.fitBounds(bounds, { padding: [40, 40] });
-            } else if (venues.length === 1) {
-                map.setView([parseFloat(venues[0].lat), parseFloat(venues[0].lng)], 14);
+            // User location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        map.setView([lat, lng], 11);
+                    },
+                    function() {
+                        // Denied or failed — fit to all markers
+                        if (venues.length > 1) {
+                            map.fitBounds(L.latLngBounds(venues.map(v => [v.lat, v.lng])), { padding: [40, 40] });
+                        } else if (venues.length === 1) {
+                            map.setView([parseFloat(venues[0].lat), parseFloat(venues[0].lng)], 14);
+                        }
+                    },
+                    { timeout: 8000, maximumAge: 300000 }
+                );
+            } else {
+                if (venues.length > 1) {
+                    map.fitBounds(L.latLngBounds(venues.map(v => [v.lat, v.lng])), { padding: [40, 40] });
+                } else if (venues.length === 1) {
+                    map.setView([parseFloat(venues[0].lat), parseFloat(venues[0].lng)], 14);
+                }
             }
         </script>
     @endpush

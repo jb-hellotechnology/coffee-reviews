@@ -13,6 +13,12 @@
         <priority>0.8</priority>
     </url>
 
+    <url>
+        <loc>{{ route('roasters.index') }}</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
     @foreach($cities as $city)
         <url>
             <loc>{{ route('venues.city', Str::slug($city)) }}</loc>
@@ -26,6 +32,14 @@
             <loc>{{ route('venues.show', $venue) }}</loc>
             <changefreq>weekly</changefreq>
             <priority>0.7</priority>
+        </url>
+    @endforeach
+
+    @foreach($roasters as $roaster)
+        <url>
+            <loc>{{ route('roasters.show', $roaster) }}</loc>
+            <changefreq>weekly</changefreq>
+            <priority>0.6</priority>
         </url>
     @endforeach
 

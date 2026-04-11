@@ -24,13 +24,11 @@ class VenueCreate extends Component
     public ?float $lat = null;
     public ?float $lng = null;
     public ?string $googlePlaceId = null;
+    public ?string $roasterId = null;
 
     // State
     public bool $formVisible = false;
     public bool $saved = false;
-
-    // Roaster
-    public ?string $roasterId = null;
 
     protected array $rules = [
         'name'     => 'required|string|max:255',
@@ -111,7 +109,7 @@ class VenueCreate extends Component
             'website'         => $this->website,
             'lat'             => $this->lat,
             'lng'             => $this->lng,
-            'roaster_id'      => $roasterId ?: null,
+            'roaster_id'      => $this->roasterId ?: null,
         ]);
 
         $this->saved = true;

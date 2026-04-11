@@ -23,8 +23,12 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->reportable(function (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage(), [
+                'exception' => get_class($e),
+                'file'      => $e->getFile(),
+                'line'      => $e->getLine(),
+            ]);
         });
     }
 }

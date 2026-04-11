@@ -14,10 +14,11 @@ Route::get('/map', [VenueController::class, 'map'])->name('venues.map');
 Route::get('/coffee-shops/{city}', [VenueController::class, 'city'])->name('venues.city');
 Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 Route::get('/sitemap.xml', function () {
-    $venues = App\Models\Venue::all();
-    $cities = App\Models\Venue::select('city')->distinct()->pluck('city');
+    $venues   = App\Models\Venue::all();
+    $cities   = App\Models\Venue::select('city')->distinct()->pluck('city');
+    $roasters = App\Models\Roaster::all();
 
-    return response()->view('sitemap', compact('venues', 'cities'))
+    return response()->view('sitemap', compact('venues', 'cities', 'roasters'))
         ->header('Content-Type', 'application/xml');
 })->name('sitemap');
 Route::get('/roasters', [RoasterController::class, 'index'])->name('roasters.index');
