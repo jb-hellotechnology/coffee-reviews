@@ -22,6 +22,9 @@ Route::get('/sitemap.xml', function () {
         ->header('Content-Type', 'application/xml');
 })->name('sitemap');
 Route::get('/roasters', [RoasterController::class, 'index'])->name('roasters.index');
+Route::get('/privacy', function () {
+    return view('privacy');
+})->name('privacy');
 
 // Auth required
 Route::middleware('auth')->group(function () {
