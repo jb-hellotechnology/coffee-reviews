@@ -14,10 +14,16 @@
                 <div class="flex items-center gap-5">
 
                     {{-- Avatar --}}
-                    <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
-                        <span class="text-2xl font-bold text-indigo-700">
-                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                        </span>
+                    <div class="w-16 h-16 rounded-full overflow-hidden bg-indigo-100 flex items-center justify-center shrink-0">
+                        @if($user->avatarUrl())
+                            <img src="{{ $user->avatarUrl() }}"
+                                 alt="{{ $user->name }}"
+                                 class="w-full h-full object-cover"/>
+                        @else
+                            <span class="text-2xl font-bold text-indigo-700">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                            </span>
+                        @endif
                     </div>
 
                     <div class="flex-1 min-w-0">
@@ -25,6 +31,15 @@
                         <p class="text-sm text-gray-400 mt-0.5">
                             Member since {{ $user->created_at->format('F Y') }}
                         </p>
+                        @if($user->bio)
+                            <p class="text-sm text-gray-600 mt-2 leading-relaxed">{{ $user->bio }}</p>
+                        @endif
+                        @if($user->website)
+                            <a href="{{ $user->website }}" target="_blank"
+                               class="text-sm text-indigo-600 hover:underline mt-1 inline-block">
+                                {{ $user->website }}
+                            </a>
+                        @endif
                     </div>
 
                     @auth

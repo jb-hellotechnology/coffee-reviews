@@ -10,6 +10,7 @@ use Illuminate\View\View;
 use App\Mail\ReviewDeletedMail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VenueVerifiedMail;
+use App\Models\Roaster;
 
 
 class AdminController extends Controller
@@ -120,5 +121,14 @@ class AdminController extends Controller
         $user->delete();
 
         return back()->with('success', 'User banned and reviews removed.');
+    }
+
+    public function roasters(): View
+    {
+        $roasters = Roaster::withCount('venues')
+            ->orderBy('name')
+            ->paginate(20);
+
+        return view('admin.roasters', compact('roasters'));
     }
 }

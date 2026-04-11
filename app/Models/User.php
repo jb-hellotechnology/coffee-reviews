@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Review;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -24,6 +25,9 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'bio',
+        'website',
+        'avatar',
     ];
 
     public function isAdmin(): bool
@@ -54,5 +58,13 @@ class User extends Authenticatable
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function avatarUrl(): ?string
+    {
+        if ($this->avatar) {
+            return Storage::url($this->avatar);
+        }
+        return null;
     }
 }

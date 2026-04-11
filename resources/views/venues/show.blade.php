@@ -119,11 +119,17 @@
                     <div class="bg-white rounded-lg border border-gray-200 p-5 mb-3">
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-2">
-                                <div class="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center">
-                                    <span class="text-xs font-medium text-indigo-700">
-                                        {{ strtoupper(substr($review->user->name, 0, 1)) }}
-                                    </span>
-                                </div>
+                                <div class="w-7 h-7 rounded-full overflow-hidden bg-indigo-100 flex items-center justify-center shrink-0">
+                                   @if($review->user->avatarUrl())
+                                       <img src="{{ $review->user->avatarUrl() }}"
+                                            alt="{{ $review->user->name }}"
+                                            class="w-full h-full object-cover"/>
+                                   @else
+                                       <span class="text-xs font-semibold text-indigo-700">
+                                           {{ strtoupper(substr($review->user->name, 0, 1)) }}
+                                       </span>
+                                   @endif
+                               </div>
                                 <a href="{{ route('users.show', $review->user) }}"
                                    class="text-sm font-medium text-gray-700 hover:text-indigo-600">
                                     {{ $review->user->name }}

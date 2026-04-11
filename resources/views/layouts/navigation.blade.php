@@ -47,10 +47,16 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">
-                                <div class="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center shrink-0">
-                                    <span class="text-xs font-bold text-white">
-                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                    </span>
+                                <div class="w-7 h-7 rounded-full overflow-hidden bg-indigo-600 flex items-center justify-center shrink-0">
+                                    @if(Auth::user()->avatarUrl())
+                                        <img src="{{ Auth::user()->avatarUrl() }}"
+                                             alt="{{ Auth::user()->name }}"
+                                             class="w-full h-full object-cover"/>
+                                    @else
+                                        <span class="text-xs font-bold text-white">
+                                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                        </span>
+                                    @endif
                                 </div>
                                 <span>{{ Auth::user()->name }}</span>
                                 <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

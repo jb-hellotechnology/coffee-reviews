@@ -31,9 +31,10 @@
             {{-- Navigation --}}
             <div class="grid grid-cols-3 gap-4">
                 @foreach([
-                    ['Manage venues',  route('admin.venues'),  'Review and verify submitted venues'],
-                    ['Manage reviews', route('admin.reviews'), 'Approve or remove reviews'],
-                    ['Manage users',   route('admin.users'),   'View and ban users'],
+                    ['Manage venues',   route('admin.venues'),   'Review and verify submitted venues'],
+                    ['Manage reviews',  route('admin.reviews'),  'Approve or remove reviews'],
+                    ['Manage users',    route('admin.users'),    'View and ban users'],
+                    ['Manage roasters', route('admin.roasters'), 'Edit and manage coffee roasters'],
                 ] as [$title, $url, $desc])
                     <a href="{{ $url }}"
                        class="block bg-white rounded-lg border border-gray-200 p-5 hover:border-indigo-300 hover:shadow-sm transition-all">

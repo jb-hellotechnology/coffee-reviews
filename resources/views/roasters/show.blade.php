@@ -7,12 +7,22 @@
                 <h1 class="font-display font-bold text-2xl text-gray-900">{{ $roaster->name }}</h1>
                 <p class="text-sm text-gray-500 mt-0.5">{{ $roaster->city }}</p>
             </div>
-            @if($roaster->website)
-                <a href="{{ $roaster->website }}" target="_blank"
-                   class="px-4 py-2 border border-gray-200 text-sm font-medium text-gray-600 rounded-lg hover:border-indigo-300 hover:text-indigo-600 transition-colors">
-                    Visit website
-                </a>
-            @endif
+            <div class="flex items-center gap-3">
+                @auth
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('roasters.edit', $roaster) }}"
+                           class="px-4 py-2 border border-gray-200 text-sm font-medium text-gray-600 rounded-lg hover:border-indigo-300 hover:text-indigo-600 transition-colors">
+                            Edit roaster
+                        </a>
+                    @endif
+                @endauth
+                @if($roaster->website)
+                    <a href="{{ $roaster->website }}" target="_blank"
+                       class="px-4 py-2 border border-gray-200 text-sm font-medium text-gray-600 rounded-lg hover:border-indigo-300 hover:text-indigo-600 transition-colors">
+                        Visit website
+                    </a>
+                @endif
+            </div>
         </div>
     </x-slot>
 

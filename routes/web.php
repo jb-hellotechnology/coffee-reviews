@@ -41,6 +41,8 @@ Route::middleware('auth')->group(function () {
 
     // Roasters
     Route::get('/roasters/create', [RoasterController::class, 'create'])->name('roasters.create');
+    Route::get('/roasters/{roaster}/edit', [RoasterController::class, 'edit'])->name('roasters.edit');
+    Route::patch('/roasters/{roaster}', [RoasterController::class, 'update'])->name('roasters.update');
 });
 
 Route::get('/roasters/{roaster}', [RoasterController::class, 'show'])->name('roasters.show');
@@ -59,6 +61,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::delete('/users/{user}', [AdminController::class, 'banUser'])->name('users.ban');
+
+    Route::get('/roasters', [AdminController::class, 'roasters'])->name('roasters');
 });
 
 require __DIR__.'/auth.php';
