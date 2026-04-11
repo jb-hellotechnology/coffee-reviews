@@ -7,7 +7,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
             {{-- Profile header --}}
             <div class="bg-white rounded-lg border border-gray-200 p-6">
@@ -82,7 +82,7 @@
 
             {{-- Reviews --}}
             <div>
-                <h2 class="text-base font-medium text-gray-900 mb-3">Reviews</h2>
+                <h2 class="text-base font-medium text-gray-900 mb-3 mt-8">Reviews</h2>
 
                 @if($reviews->isEmpty())
                     <div class="bg-white rounded-lg border border-gray-200 p-10 text-center">
