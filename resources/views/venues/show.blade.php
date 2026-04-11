@@ -187,11 +187,11 @@
     {
         "@context": "https://schema.org",
         "@type": "CafeOrCoffeeShop",
-        "name": "{{ addslashes($venue->name) }}",
+        "name": @json($venue->name),
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "{{ addslashes($venue->address) }}",
-            "addressLocality": "{{ addslashes($venue->city) }}",
+            "streetAddress": @json($venue->address),
+            "addressLocality": @json($venue->city),
             "postalCode": "{{ $venue->postcode }}",
             "addressCountry": "GB"
         },
@@ -221,10 +221,10 @@
                 "@type": "Review",
                 "author": {
                     "@type": "Person",
-                    "name": "{{ addslashes($review->user->name) }}"
+                    "name": @json($review->user->name),
                 },
                 "datePublished": "{{ $review->created_at->toIso8601String() }}",
-                "reviewBody": "{{ addslashes(Str::limit($review->body, 500)) }}"
+                "reviewBody": @json(Str::limit($review->body, 500))
                 @if($review->scores && $review->scores->overall > 0)
                 ,"reviewRating": {
                     "@type": "Rating",
