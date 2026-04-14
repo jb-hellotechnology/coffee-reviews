@@ -25,6 +25,9 @@ Route::get('/roasters', [RoasterController::class, 'index'])->name('roasters.ind
 Route::get('/privacy', function () {
     return view('privacy');
 })->name('privacy');
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
 
 // Auth required
 Route::middleware('auth')->group(function () {
