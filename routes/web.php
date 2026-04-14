@@ -46,6 +46,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/roasters/create', [RoasterController::class, 'create'])->name('roasters.create');
     Route::get('/roasters/{roaster}/edit', [RoasterController::class, 'edit'])->name('roasters.edit');
     Route::patch('/roasters/{roaster}', [RoasterController::class, 'update'])->name('roasters.update');
+
+    Route::get('/reviews/{review}/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
+    Route::patch('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
 });
 
 Route::get('/roasters/{roaster}', [RoasterController::class, 'show'])->name('roasters.show');

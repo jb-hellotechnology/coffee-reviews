@@ -1,6 +1,12 @@
 <x-app-layout>
     <x-slot name="title">{{ $venue->name }} | {{ $venue->city }}</x-slot>
     <x-slot name="description">{{ $venue->name }} in {{ $venue->city }} — read coffee reviews and see scores for espresso, bean sourcing, milk work and more.</x-slot>
+    @push('styles')
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+        <style>
+            #venue-map { height: 280px; width: 100%; border-radius: 12px; z-index: 0; }
+        </style>
+    @endpush
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
@@ -103,6 +109,13 @@
                 </div>
             </div>
 
+            {{-- Map --}}
+            @if($venue->lat && $venue->lng)
+                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden mt-8">
+                    <div id="venue-map"></div>
+                </div>
+            @endif
+
             @if(session('review_blocked'))
                 <div class="max-w-3xl mx-auto sm:px-6 lg:px-8 mb-6">
                     <div class="rounded-lg bg-amber-50 border border-amber-200 p-4">
@@ -166,6 +179,21 @@
                                 @endforeach
                             </div>
                         @endif
+
+                        {{-- Footer --}}
+                        <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
+                            <span class="text-xs text-gray-400">
+                                {{ $review->created_at->diffForHumans() }}
+                            </span>
+                            @auth
+                                @if(auth()->id() === $review->user_id || auth()->user()->isAdmin())
+                                    <a href="{{ route('reviews.edit', $review) }}"
+                                       class="text-xs text-indigo-600 hover:underline">
+                                        Edit review
+                                    </a>
+                                @endif
+                            @endauth
+                        </div>
                     </div>
                 @empty
                     <div class="bg-white rounded-lg border border-gray-200 p-8 text-center">
@@ -238,5 +266,48 @@
         ]
     }
     </script>
+    @endpush
+    @push('scripts')
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+        <script>
+            @if($venue->lat && $venue->lng)
+                const map = L.map('venue-map', {
+                    center: [{{ $venue->lat }}, {{ $venue->lng }}],
+                    zoom: 15,
+                    zoomControl: true,
+                    scrollWheelZoom: false,
+                });
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    maxZoom: 19,
+                }).addTo(map);
+
+                const icon = L.divIcon({
+                    className: '',
+                    html: `<div style="
+                        width: 36px;
+                        height: 36px;
+                        background: #4f46e5;
+                        border: 3px solid white;
+                        border-radius: 50%;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 16px;
+                    ">☕</div>`,
+                    iconSize: [36, 36],
+                    iconAnchor: [18, 18],
+                    popupAnchor: [0, -20],
+                });
+
+                L.marker([{{ $venue->lat }}, {{ $venue->lng }}], { icon: icon })
+                    .addTo(map)
+                    .bindPopup(`<div style="font-family:sans-serif;font-size:13px;font-weight:600;">{{ addslashes($venue->name) }}</div>
+                                <div style="font-size:11px;color:#6b7280;margin-top:2px;">{{ addslashes($venue->address) }}</div>`)
+                    .openPopup();
+            @endif
+        </script>
     @endpush
 </x-app-layout>

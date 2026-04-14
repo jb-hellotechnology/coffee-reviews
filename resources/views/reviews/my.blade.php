@@ -92,16 +92,22 @@
                             <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
                                 <a href="{{ route('venues.show', $review->venue) }}"
                                    class="text-xs text-indigo-600 hover:underline">
-                                    View venue page
+                                    View venue
                                 </a>
-                                @if($review->venue->coffee_score > 0)
-                                    <span class="text-xs text-gray-400">
-                                        Venue score
-                                        <span class="font-medium text-indigo-600">
-                                            {{ number_format($review->venue->coffee_score, 1) }}
+                                <div class="flex items-center gap-3">
+                                    @if($review->venue->coffee_score > 0)
+                                        <span class="text-xs text-gray-400">
+                                            Venue score
+                                            <span class="font-medium text-indigo-600">
+                                                {{ number_format($review->venue->coffee_score, 1) }}
+                                            </span>
                                         </span>
-                                    </span>
-                                @endif
+                                    @endif
+                                    <a href="{{ route('reviews.edit', $review) }}"
+                                       class="text-xs text-indigo-600 hover:underline">
+                                        Edit
+                                    </a>
+                                </div>
                             </div>
 
                         </div>
