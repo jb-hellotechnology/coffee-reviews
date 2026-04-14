@@ -89,6 +89,29 @@
             </div>
         </div>
 
+        {{-- Photo upload --}}
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-4">
+            <h3 class="text-base font-medium text-gray-900 mb-1">Add a photo</h3>
+            <p class="text-sm text-gray-500 mb-3">
+                Optional — share a photo of your coffee or the venue. Max 5MB.
+            </p>
+
+            <input type="file" wire:model="photo" accept="image/*"
+                   class="text-sm text-gray-600"/>
+
+            @error('photo')
+                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+            @enderror
+
+            @if($photo)
+                <div class="mt-3">
+                    <img src="{{ $photo->temporaryUrl() }}"
+                         alt="Preview"
+                         class="rounded-lg max-h-48 object-cover"/>
+                </div>
+            @endif
+        </div>
+
         {{-- Submit --}}
         <div class="flex justify-end">
             <button

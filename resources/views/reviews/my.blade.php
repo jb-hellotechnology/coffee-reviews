@@ -72,6 +72,17 @@
                                 </div>
                             @endif
 
+                            @if($review->photo && $review->photoUrl())
+                                <div class="mb-3 rounded-lg overflow-hidden">
+                                    <img src="{{ $review->photoUrl() }}"
+                                         alt="{{ $review->photo_alt ?? 'Review photo' }}"
+                                         class="w-full max-h-48 object-cover rounded-lg"/>
+                                    @if(!$review->photo_analysed)
+                                        <p class="text-xs text-gray-400 mt-1">Photo pending moderation.</p>
+                                    @endif
+                                </div>
+                            @endif
+
                             {{-- Review body --}}
                             <p class="text-sm text-gray-700 leading-relaxed">
                                 {{ $review->body }}

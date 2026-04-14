@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use App\Jobs\AnalyseReviewWithAI;
+use Illuminate\Support\Facades\Storage;
+use App\Jobs\AnalyseReviewPhoto;
 
 class Review extends Model
 {
@@ -20,6 +22,9 @@ class Review extends Model
         'ai_analysed',
         'ai_tags',
         'verified',
+        'photo',
+        'photo_alt',
+        'photo_analysed',
     ];
 
     protected $casts = [
@@ -32,6 +37,10 @@ class Review extends Model
     {
         static::created(function (Review $review) {
             AnalyseReviewWithAI::dispatch($review);
+
+            if ($review->photo) {
+                AnalyseReviewPhoto::dispatch($review);
+            }
         });
 
         static::saved(function (Review $review) {
@@ -75,5 +84,13 @@ class Review extends Model
             ->first();
 
         return $latest?->created_at->addMonths(3);
+    }
+
+    public function photoUrl(): ?string
+    {
+        if ($this->photo) {
+            return Storage::url($this->photo);
+        }
+        return null;
     }
 }

@@ -9,10 +9,16 @@ use Illuminate\View\View;
 use Livewire\Component;
 use App\Mail\ReviewSubmittedMail;
 use Illuminate\Support\Facades\Mail;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class ReviewCreate extends Component
 {
     public Venue $venue;
+
+    use WithFileUploads;
+
+    public $photo = null;
 
     public string $body = '';
 
@@ -38,6 +44,7 @@ class ReviewCreate extends Component
         'equipment'         => 'nullable|integer|min:1|max:5',
         'decaf_available'   => 'nullable|integer|min:1|max:5',
         'value'             => 'nullable|integer|min:1|max:5',
+        'photo'             => 'nullable|image|max:20480', // 20MB
     ];
 
     protected array $messages = [
@@ -69,10 +76,33 @@ class ReviewCreate extends Component
             return;
         }
 
+        $photoPath = null;
+        if ($this->photo) {
+            $manager = new \Intervention\Image\ImageManager(
+                new \Intervention\Image\Drivers\Gd\Driver()
+            );
+
+            $image = $manager->decodePath($this->photo->getRealPath());
+
+            // Only resize down if wider than 2000px
+            if ($image->width() > 2000) {
+                $image->scale(width: 2000);
+            }
+
+            $encoded = $image->encode(new \Intervention\Image\Encoders\JpegEncoder(quality: 70));
+
+            $filename = 'reviews/' . uniqid() . '.jpg';
+
+            Storage::disk('public')->put($filename, (string) $encoded);
+
+            $photoPath = $filename;
+        }
+
         $review = Review::create([
             'user_id'  => auth()->id(),
             'venue_id' => $this->venue->id,
             'body'     => $this->body,
+            'photo'    => $photoPath,
         ]);
 
         ReviewScore::create([
@@ -88,6 +118,7 @@ class ReviewCreate extends Component
         ]);
 
         $this->saved = true;
+
         Mail::to(auth()->user())->send(new ReviewSubmittedMail($review));
     }
 
