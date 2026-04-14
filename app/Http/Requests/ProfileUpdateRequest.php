@@ -21,6 +21,7 @@ class ProfileUpdateRequest extends FormRequest
             'bio'     => ['nullable', 'string', 'max:500'],
             'website' => ['nullable', 'url', 'max:255'],
             'avatar'  => ['nullable', 'image', 'max:2048'],
+            'expertise_level' => ['nullable', 'string', 'in:drinker,curious,enthusiast,geek,professional'],
         ];
     }
 }

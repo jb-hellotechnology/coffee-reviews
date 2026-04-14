@@ -131,4 +131,13 @@ class AdminController extends Controller
 
         return view('admin.roasters', compact('roasters'));
     }
+
+    public function toggleCoffeeExpert(User $user): RedirectResponse
+    {
+        $user->update(['is_coffee_expert' => !$user->is_coffee_expert]);
+
+        $status = $user->is_coffee_expert ? 'awarded' : 'removed';
+
+        return back()->with('success', "Coffee Expert badge {$status} for {$user->name}.");
+    }
 }

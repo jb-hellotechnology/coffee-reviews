@@ -72,6 +72,43 @@
             <x-input-error class="mt-2" :messages="$errors->get('website')"/>
         </div>
 
+        {{-- Expertise level --}}
+        <div>
+            <x-input-label value="Your coffee expertise"/>
+            <p class="text-xs text-gray-400 mb-3">Be honest — or not. We won't judge.</p>
+            <div class="space-y-2">
+                @foreach(App\Models\User::expertiseLevels() as $key => $level)
+                    <label class="flex items-center gap-3 p-3 mb-3 rounded-lg border cursor-pointer transition-colors
+                        {{ old('expertise_level', auth()->user()->expertise_level) === $key
+                            ? 'border-indigo-400 bg-indigo-50'
+                            : 'border-gray-200 hover:border-indigo-200' }}">
+                        <input type="radio" name="expertise_level" value="{{ $key }}"
+                               class="text-indigo-600 focus:ring-indigo-500"
+                               {{ old('expertise_level', auth()->user()->expertise_level) === $key ? 'checked' : '' }}>
+                        <span class="text-xl">{{ $level['emoji'] }}</span>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">{{ $level['label'] }}</p>
+                            <p class="text-xs text-gray-400">{{ $level['description'] }}</p>
+                        </div>
+                    </label>
+                @endforeach
+                <label class="flex items-center gap-3 p-3 mb-5 rounded-lg border cursor-pointer transition-colors
+                    {{ old('expertise_level', auth()->user()->expertise_level) === null
+                        ? 'border-indigo-400 bg-indigo-50'
+                        : 'border-gray-200 hover:border-indigo-200' }}">
+                    <input type="radio" name="expertise_level" value=""
+                           class="text-indigo-600 focus:ring-indigo-500"
+                           {{ old('expertise_level', auth()->user()->expertise_level) === null ? 'checked' : '' }}>
+                    <span class="text-xl">🤷</span>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">Prefer not to say</p>
+                        <p class="text-xs text-gray-400">No label shown on your reviews</p>
+                    </div>
+                </label>
+            </div>
+            <x-input-error class="mt-2" :messages="$errors->get('expertise_level')"/>
+        </div>
+
         @if (session('status') === 'profile-updated')
             <div class="rounded-lg bg-green-50 border border-green-200 p-3">
                 <p class="text-sm text-green-800">Profile updated successfully.</p>

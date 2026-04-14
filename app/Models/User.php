@@ -28,6 +28,8 @@ class User extends Authenticatable
         'bio',
         'website',
         'avatar',
+        'expertise_level',
+        'is_coffee_expert',
     ];
 
     public function isAdmin(): bool
@@ -66,5 +68,33 @@ class User extends Authenticatable
             return Storage::url($this->avatar);
         }
         return null;
+    }
+
+    public static function expertiseLevels(): array
+    {
+        return [
+            'drinker'      => ['emoji' => '☕', 'label' => 'Coffee drinker',      'description' => 'I know what I like'],
+            'curious'      => ['emoji' => '🫘', 'label' => 'Coffee curious',      'description' => 'I\'m starting to care about beans'],
+            'enthusiast'   => ['emoji' => '🔧', 'label' => 'Coffee enthusiast',   'description' => 'I own a grinder at home'],
+            'geek'         => ['emoji' => '📚', 'label' => 'Coffee geek',         'description' => 'I\'ve done a barista course'],
+            'professional' => ['emoji' => '🏆', 'label' => 'Coffee professional', 'description' => 'I work in specialty coffee'],
+        ];
+    }
+
+    public function expertiseLabel(): ?string
+    {
+        if (!$this->expertise_level) return null;
+        $levels = self::expertiseLevels();
+        return $levels[$this->expertise_level]['emoji'] . ' ' . $levels[$this->expertise_level]['label'] ?? null;
+    }
+
+    public function isTopReviewer(): bool
+    {
+        return $this->reviews()->where('verified', true)->count() >= 10;
+    }
+
+    public function isCoffeeExpert(): bool
+    {
+        return (bool) $this->is_coffee_expert;
     }
 }

@@ -67,6 +67,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::delete('/users/{user}', [AdminController::class, 'banUser'])->name('users.ban');
+    Route::post('/users/{user}/coffee-expert', [AdminController::class, 'toggleCoffeeExpert'])->name('users.coffee-expert');
 
     Route::get('/roasters', [AdminController::class, 'roasters'])->name('roasters');
 });

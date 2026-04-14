@@ -31,6 +31,23 @@
                         <p class="text-sm text-gray-400 mt-0.5">
                             Member since {{ $user->created_at->format('F Y') }}
                         </p>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            @if($user->isCoffeeExpert())
+                                <span class="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                                    ⭐ Coffee Expert
+                                </span>
+                            @endif
+                            @if($user->isTopReviewer())
+                                <span class="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
+                                    🏅 Top Reviewer
+                                </span>
+                            @endif
+                            @if($user->expertise_level)
+                                <span class="inline-block text-xs text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">
+                                    {{ $user->expertiseLabel() }}
+                                </span>
+                            @endif
+                        </div>
                         @if($user->bio)
                             <p class="text-sm text-gray-600 mt-2 leading-relaxed">{{ $user->bio }}</p>
                         @endif
@@ -56,11 +73,14 @@
                 {{-- Stats row --}}
                 <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-4 pt-5 border-t border-gray-100">
                     <div class="text-center">
-                        <p class="text-2xl font-bold text-indigo-600">
-                            {{ $stats['total_reviews'] }}
-                        </p>
+                        <p class="text-2xl font-bold text-indigo-600">{{ $stats['total_reviews'] }}</p>
                         <p class="text-xs text-gray-500 mt-0.5">
                             {{ Str::plural('review', $stats['total_reviews']) }}
+                            @if(!$user->isTopReviewer() && $stats['total_reviews'] < 10)
+                                <span class="block text-gray-400">
+                                    {{ 10 - $stats['total_reviews'] }} more for Top Reviewer
+                                </span>
+                            @endif
                         </p>
                     </div>
                     <div class="text-center">

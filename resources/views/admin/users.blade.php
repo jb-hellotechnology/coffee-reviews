@@ -43,17 +43,36 @@
                                     Joined {{ $user->created_at->diffForHumans() }}
                                     · {{ $user->reviews_count }} {{ Str::plural('review', $user->reviews_count) }}
                                 </p>
+                                <div class="flex items-center gap-2 flex-wrap mt-1">
+                                    @if($user->is_coffee_expert)
+                                        <span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">⭐ Coffee Expert</span>
+                                    @endif
+                                    @if($user->isTopReviewer())
+                                        <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">🏅 Top Reviewer</span>
+                                    @endif
+                                </div>
                             </div>
-                            @if(!$user->isAdmin())
-                                <form method="POST" action="{{ route('admin.users.ban', $user) }}"
-                                      onsubmit="return confirm('Ban {{ addslashes($user->name) }} and delete all their reviews?')">
+                            <div class="flex items-center gap-2 shrink-0">
+                                <form method="POST" action="{{ route('admin.users.coffee-expert', $user) }}">
                                     @csrf
-                                    @method('DELETE')
-                                    <button class="px-3 py-1 !bg-red-600 !text-white text-xs rounded-md">
-                                        Ban user
+                                    <button class="px-3 py-1 text-xs rounded-md border transition-colors
+                                        {{ $user->is_coffee_expert
+                                            ? '!bg-amber-100 !text-amber-800 border-amber-200 hover:!bg-amber-200'
+                                            : 'bg-white text-gray-600 border-gray-200 hover:border-amber-300 hover:text-amber-700' }}">
+                                        ⭐ {{ $user->is_coffee_expert ? 'Remove Expert' : 'Make Expert' }}
                                     </button>
                                 </form>
-                            @endif
+                                @if(!$user->isAdmin())
+                                    <form method="POST" action="{{ route('admin.users.ban', $user) }}"
+                                          onsubmit="return confirm('Ban {{ addslashes($user->name) }} and delete all their reviews?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="px-3 py-1 !bg-red-600 !text-white text-xs rounded-md">
+                                            Ban user
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @empty

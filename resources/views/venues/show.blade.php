@@ -154,10 +154,27 @@
                                             </span>
                                         @endif
                                     </div>
-                                    <a href="{{ route('users.show', $review->user) }}"
-                                       class="text-sm font-medium text-gray-700 hover:text-indigo-600">
-                                        {{ $review->user->name }}
-                                    </a>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <a href="{{ route('users.show', $review->user) }}"
+                                           class="text-sm font-medium text-gray-700 hover:text-indigo-600">
+                                            {{ $review->user->name }}
+                                        </a>
+                                        @if($review->user->isCoffeeExpert())
+                                            <span class="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                                                ⭐ Coffee Expert
+                                            </span>
+                                        @endif
+                                        @if($review->user->isTopReviewer())
+                                            <span class="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
+                                                🏅 Top Reviewer
+                                            </span>
+                                        @endif
+                                        @if($review->user->expertise_level)
+                                            <span class="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+                                                {{ $review->user->expertiseLabel() }}
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div>
                                 <span class="text-xs text-gray-400">
                                     {{ $review->created_at->diffForHumans() }}
