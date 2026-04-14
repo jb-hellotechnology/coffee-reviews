@@ -64,7 +64,7 @@ class AdminController extends Controller
     public function reviews(): View
     {
         $reviews = Review::with(['user', 'venue'])
-            ->orderBy('verified')
+            ->orderByRaw("FIELD(moderation_action, 'flag', 'reject', 'pending', 'approve')")
             ->orderByDesc('created_at')
             ->paginate(20);
 

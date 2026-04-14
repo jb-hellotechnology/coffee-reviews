@@ -69,6 +69,12 @@ class ReviewCreate extends Component
 
     public function save(): void
     {
+        // Fast synchronous injection check before any DB writes
+        if ($this->containsInjection($this->body)) {
+            $this->addError('body', 'Your review contains invalid content and cannot be submitted.');
+            return;
+        }
+
         $this->validate();
 
         if (!Review::userCanReviewVenue(auth()->user(), $this->venue)) {
@@ -120,6 +126,32 @@ class ReviewCreate extends Component
         $this->saved = true;
 
         Mail::to(auth()->user())->send(new ReviewSubmittedMail($review));
+    }
+
+    private function containsInjection(string $text): bool
+    {
+        $patterns = [
+            '/<[^>]*>/',                          // HTML tags
+            '/javascript:/i',                      // JS protocol
+            '/on\w+\s*=/i',                        // Event handlers
+            '/SELECT\s+.*\s+FROM/i',               // SQL SELECT
+            '/INSERT\s+INTO/i',                    // SQL INSERT
+            '/DROP\s+TABLE/i',                     // SQL DROP
+            '/UNION\s+SELECT/i',                   // SQL UNION
+            '/\{\{.*\}\}/',                        // Template injection
+            '/\$\{.*\}/',                          // JS template literals
+            '/<\?php/i',                           // PHP tags
+            '/eval\s*\(/i',                        // eval()
+            '/base64_decode\s*\(/i',               // base64 decode
+        ];
+
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $text)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function render(): View

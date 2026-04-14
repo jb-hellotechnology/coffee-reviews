@@ -27,14 +27,26 @@
                                        class="font-medium text-gray-900 hover:text-indigo-600">
                                         {{ $review->venue->name }}
                                     </a>
-                                    @if(!$review->verified)
+                                    @if($review->moderation_action === 'flag')
+                                        <span class="px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 text-xs">
+                                            Flagged
+                                        </span>
+                                    @elseif($review->moderation_action === 'reject')
+                                        <span class="px-2 py-0.5 rounded-full bg-red-100 text-red-800 text-xs">
+                                            Rejected
+                                        </span>
+                                    @elseif(!$review->verified)
                                         <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs">
-                                            Unverified
+                                            Pending
                                         </span>
                                     @else
                                         <span class="px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-xs">
-                                            Verified
+                                            Approved
                                         </span>
+                                    @endif
+
+                                    @if($review->moderation_reason)
+                                        <p class="text-xs text-gray-400 mt-1">{{ $review->moderation_reason }}</p>
                                     @endif
                                 </div>
                                 <p class="text-xs text-gray-400 mb-2">

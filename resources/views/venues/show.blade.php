@@ -129,83 +129,95 @@
                 <h3 class="text-base font-medium text-gray-900 mb-3 mt-8">Reviews</h3>
 
                 @forelse($venue->reviews->sortByDesc('created_at') as $review)
-                    <div class="bg-white rounded-lg border border-gray-200 p-5 mb-3">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-2">
-                                <div class="w-7 h-7 rounded-full overflow-hidden bg-indigo-100 flex items-center justify-center shrink-0">
-                                   @if($review->user->avatarUrl())
-                                       <img src="{{ $review->user->avatarUrl() }}"
-                                            alt="{{ $review->user->name }}"
-                                            class="w-full h-full object-cover"/>
-                                   @else
-                                       <span class="text-xs font-semibold text-indigo-700">
-                                           {{ strtoupper(substr($review->user->name, 0, 1)) }}
-                                       </span>
-                                   @endif
-                               </div>
-                                <a href="{{ route('users.show', $review->user) }}"
-                                   class="text-sm font-medium text-gray-700 hover:text-indigo-600">
-                                    {{ $review->user->name }}
-                                </a>
-                            </div>
-                            <span class="text-xs text-gray-400">
-                                {{ $review->created_at->diffForHumans() }}
-                            </span>
-                        </div>
-
-                        {{-- Scores for this review --}}
-                        @if($review->scores)
-                            <div class="flex flex-wrap gap-2 mb-3">
-                                @foreach($dimensions as $field => $label)
-                                    @if($review->scores->$field)
-                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-xs text-amber-800">
-                                            {{ $label }}
-                                            <span class="font-medium">{{ $review->scores->$field }}/5</span>
-                                        </span>
-                                    @endif
-                                @endforeach
-                            </div>
-                        @endif
-
-                        @if($review->photo && $review->photoUrl())
-                            <div class="mb-3 rounded-lg overflow-hidden">
-                                <img src="{{ $review->photoUrl() }}"
-                                     alt="{{ $review->photo_alt ?? 'Review photo for ' . $venue->name }}"
-                                     class="w-full max-h-64 object-cover rounded-lg"/>
-                                @if(!$review->photo_analysed)
-                                    <p class="text-xs text-gray-400 mt-1">Photo pending moderation.</p>
-                                @endif
-                            </div>
-                        @endif
-
-                        <p class="text-sm text-gray-700 leading-relaxed">{{ $review->body }}</p>
-
-                        {{-- AI tags --}}
-                        @if($review->ai_tags && count($review->ai_tags) > 0)
-                            <div class="flex flex-wrap gap-1 mt-3">
-                                @foreach($review->ai_tags as $tag)
-                                    <span class="px-2 py-0.5 rounded-full bg-gray-100 text-xs text-gray-500">
-                                        {{ $tag }}
-                                    </span>
-                                @endforeach
-                            </div>
-                        @endif
-
-                        {{-- Footer --}}
-                        <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
-                            <span class="text-xs text-gray-400">
-                                {{ $review->created_at->diffForHumans() }}
-                            </span>
-                            @auth
-                                @if(auth()->id() === $review->user_id || auth()->user()->isAdmin())
-                                    <a href="{{ route('reviews.edit', $review) }}"
-                                       class="text-xs text-indigo-600 hover:underline">
-                                        Edit review
+                    @if(!$review->verified)
+                        @auth
+                            @if(auth()->id() === $review->user_id)
+                                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-3">
+                                    <p class="text-sm font-medium text-amber-800">
+                                        Your review is pending moderation and will appear shortly.
+                                    </p>
+                                </div>
+                            @endif
+                        @endauth
+                    @else
+                        <div class="bg-white rounded-lg border border-gray-200 p-5 mb-3">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-full overflow-hidden bg-indigo-100 flex items-center justify-center shrink-0">
+                                        @if($review->user->avatarUrl())
+                                            <img src="{{ $review->user->avatarUrl() }}"
+                                                 alt="{{ $review->user->name }}"
+                                                 class="w-full h-full object-cover"/>
+                                        @else
+                                            <span class="text-xs font-semibold text-indigo-700">
+                                                {{ strtoupper(substr($review->user->name, 0, 1)) }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <a href="{{ route('users.show', $review->user) }}"
+                                       class="text-sm font-medium text-gray-700 hover:text-indigo-600">
+                                        {{ $review->user->name }}
                                     </a>
-                                @endif
-                            @endauth
+                                </div>
+                                <span class="text-xs text-gray-400">
+                                    {{ $review->created_at->diffForHumans() }}
+                                </span>
+                            </div>
+
+                            {{-- Scores for this review --}}
+                            @if($review->scores)
+                                <div class="flex flex-wrap gap-2 mb-3">
+                                    @foreach($dimensions as $field => $label)
+                                        @if($review->scores->$field)
+                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-xs text-amber-800">
+                                                {{ $label }}
+                                                <span class="font-medium">{{ $review->scores->$field }}/5</span>
+                                            </span>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            @if($review->photo && $review->photoUrl())
+                                <div class="mb-3 rounded-lg overflow-hidden">
+                                    <img src="{{ $review->photoUrl() }}"
+                                         alt="{{ $review->photo_alt ?? 'Review photo for ' . $venue->name }}"
+                                         class="w-full max-h-64 object-cover rounded-lg"/>
+                                    @if(!$review->photo_analysed)
+                                        <p class="text-xs text-gray-400 mt-1">Photo pending moderation.</p>
+                                    @endif
+                                </div>
+                            @endif
+
+                            <p class="text-sm text-gray-700 leading-relaxed">{{ $review->body }}</p>
+
+                            {{-- AI tags --}}
+                            @if($review->ai_tags && count($review->ai_tags) > 0)
+                                <div class="flex flex-wrap gap-1 mt-3">
+                                    @foreach($review->ai_tags as $tag)
+                                        <span class="px-2 py-0.5 rounded-full bg-gray-100 text-xs text-gray-500">
+                                            {{ $tag }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            {{-- Footer --}}
+                            <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
+                                <span class="text-xs text-gray-400">
+                                    {{ $review->created_at->diffForHumans() }}
+                                </span>
+                                @auth
+                                    @if(auth()->id() === $review->user_id || auth()->user()->isAdmin())
+                                        <a href="{{ route('reviews.edit', $review) }}"
+                                           class="text-xs text-indigo-600 hover:underline">
+                                            Edit review
+                                        </a>
+                                    @endif
+                                @endauth
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 @empty
                     <div class="bg-white rounded-lg border border-gray-200 p-8 text-center">
                         <p class="text-gray-500 text-sm">No reviews yet.</p>

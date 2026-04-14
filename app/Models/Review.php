@@ -25,6 +25,8 @@ class Review extends Model
         'photo',
         'photo_alt',
         'photo_analysed',
+        'moderation_action',
+        'moderation_reason',
     ];
 
     protected $casts = [
