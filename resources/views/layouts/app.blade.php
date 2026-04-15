@@ -37,7 +37,7 @@
                             <h3 class="font-display font-bold text-white text-lg">
                                 Stay in the loop ☕
                             </h3>
-                            <p class="text-indigo-200 text-sm mt-1">
+                            <p class="text-indigo-200 text-sm mt-1 text-white">
                                 New venues, coffee guides and platform updates — straight to your inbox.
                             </p>
                         </div>
@@ -67,7 +67,7 @@
             </div>
 
             {{-- Existing footer --}}
-            <footer class="border-t border-gray-200 bg-white mt-12">
+            <footer class="border-t border-gray-200 bg-white">
                 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div class="flex items-center gap-2">
