@@ -81,4 +81,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/roasters', [AdminController::class, 'roasters'])->name('roasters');
 });
 
+Route::post('/webhook/wordpress', function (\Illuminate\Http\Request $request) {
+    \Illuminate\Support\Facades\Cache::forget('wp_posts_10_1');
+    \Illuminate\Support\Facades\Cache::forget('wp_posts_12_1');
+    return response()->json(['ok' => true]);
+})->name('webhook.wordpress');
+
 require __DIR__.'/auth.php';

@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="title" :value="strip_tags($post['title']['rendered'])"></x-slot>
+    <x-slot name="title" :value="{!! $post['title']['rendered'] !!}"></x-slot>
     <x-slot name="description">{{ strip_tags(Str::limit($post['excerpt']['rendered'], 160)) }}</x-slot>
 
     @push('styles')
