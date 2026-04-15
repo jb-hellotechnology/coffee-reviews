@@ -50,4 +50,8 @@ return [
         'password' => env('WORDPRESS_API_PASSWORD'),
     ],
 
+    'brevo' => [
+        'key'     => env('BREVO_API_KEY'),
+        'list_id' => env('BREVO_LIST_ID', 2),
+    ],
 ];

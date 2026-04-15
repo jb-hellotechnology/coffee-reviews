@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RoasterController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\NewsletterController;
 
 // Public routes
 Route::get('/', [VenueController::class, 'index'])->name('venues.index');
@@ -35,6 +36,8 @@ Route::get('/about', function () {
 })->name('about');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+
 // Auth required
 Route::middleware('auth')->group(function () {
     // Profile (Breeze)

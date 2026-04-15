@@ -14,6 +14,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Mail\WelcomeMail;
 use Illuminate\Support\Facades\Mail;
+use App\Services\BrevoService;
 
 class RegisteredUserController extends Controller
 {
@@ -29,9 +30,9 @@ class RegisteredUserController extends Controller
             'email'                 => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password'              => ['required', 'confirmed', Rules\Password::defaults()],
             'cf-turnstile-response' => ['required', 'string'],
+            'newsletter'            => ['nullable', 'boolean'],
         ]);
 
-        // Verify with Cloudflare
         if (!$this->verifyTurnstile($request->input('cf-turnstile-response'), $request->ip())) {
             return back()
                 ->withErrors(['cf-turnstile-response' => 'Captcha verification failed. Please try again.'])
@@ -45,6 +46,12 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+
+        // Add to Brevo mailing list if they opted in
+        if ($request->boolean('newsletter', true)) {
+            app(BrevoService::class)->addContact($user->email, $user->name);
+        }
+
         Mail::to($user)->send(new WelcomeMail($user));
 
         Auth::login($user);

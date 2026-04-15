@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
+use App\Services\BrevoService;
 
 class ProfileController extends Controller
 {
@@ -75,6 +76,9 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        // Remove from Brevo mailing list
+        app(BrevoService::class)->removeContact($user->email);
+
         Auth::logout();
 
         $user->delete();
@@ -82,6 +86,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return redirect('/');
     }
 }

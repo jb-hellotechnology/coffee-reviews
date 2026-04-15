@@ -42,6 +42,17 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        {{-- Newsletter opt-in --}}
+        <div class="mt-4">
+            <label class="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" name="newsletter" value="1" checked
+                       class="mt-0.5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
+                <span class="text-sm text-gray-600">
+                    Keep me updated with coffee news, new venues, <strong>special offers</strong> and platform updates. You can unsubscribe at any time.
+                </span>
+            </label>
+        </div>
+
         {{-- Turnstile widget --}}
         <div class="mt-4">
             <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}"></div>
