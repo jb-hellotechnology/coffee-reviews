@@ -45,6 +45,7 @@
                             <a href="{{ route('venues.index') }}" class="hover:text-gray-600">Coffee shops</a>
                             <a href="{{ route('venues.map') }}" class="hover:text-gray-600">Map</a>
                             <a href="{{ route('about') }}" class="hover:text-gray-600">About</a>
+                            <a href="{{ route('blog.index') }}" class="hover:text-gray-600">Blog</a>
                             <a href="{{ route('privacy') }}" class="hover:text-gray-600">Privacy policy</a>
                             @auth
                                 <a href="{{ route('venues.create') }}" class="hover:text-gray-600">Add a venue</a>

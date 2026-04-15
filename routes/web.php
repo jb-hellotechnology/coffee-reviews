@@ -7,6 +7,7 @@ use App\Http\Controllers\VenueController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RoasterController;
+use App\Http\Controllers\BlogController;
 
 // Public routes
 Route::get('/', [VenueController::class, 'index'])->name('venues.index');
@@ -18,7 +19,11 @@ Route::get('/sitemap.xml', function () {
     $cities   = App\Models\Venue::select('city')->distinct()->pluck('city');
     $roasters = App\Models\Roaster::all();
 
-    return response()->view('sitemap', compact('venues', 'cities', 'roasters'))
+    $wordpress = app(App\Services\WordPressService::class);
+    $blogResult = $wordpress->getPosts(100, 1);
+    $blogPosts  = $blogResult['posts'];
+
+    return response()->view('sitemap', compact('venues', 'cities', 'roasters', 'blogPosts'))
         ->header('Content-Type', 'application/xml');
 })->name('sitemap');
 Route::get('/roasters', [RoasterController::class, 'index'])->name('roasters.index');
@@ -28,7 +33,8 @@ Route::get('/privacy', function () {
 Route::get('/about', function () {
     return view('about');
 })->name('about');
-
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 // Auth required
 Route::middleware('auth')->group(function () {
     // Profile (Breeze)

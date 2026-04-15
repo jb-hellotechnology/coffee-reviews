@@ -43,4 +43,13 @@
         </url>
     @endforeach
 
+    @foreach($blogPosts as $post)
+        <url>
+            <loc>{{ route('blog.show', $post['slug']) }}</loc>
+            <lastmod>{{ \Carbon\Carbon::parse($post['modified'])->toAtomString() }}</lastmod>
+            <changefreq>monthly</changefreq>
+            <priority>0.6</priority>
+        </url>
+    @endforeach
+
 </urlset>

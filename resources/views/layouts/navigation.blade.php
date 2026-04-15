@@ -30,6 +30,13 @@
                                : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50' }}">
                         Roasters
                     </a>
+                    <a href="{{ route('blog.index') }}"
+                       class="px-3 py-2 rounded-md text-sm font-medium transition-colors
+                           {{ request()->routeIs('blog.*')
+                               ? 'bg-gray-100 text-gray-900'
+                               : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50' }}">
+                        Blog
+                    </a>
                     @auth
                         <a href="{{ route('venues.create') }}"
                            class="px-3 py-2 rounded-md text-sm font-medium transition-colors
@@ -130,6 +137,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('venues.map') }}" :active="request()->routeIs('venues.map')">
                 Map
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('blog.index') }}" :active="request()->routeIs('blog.*')">
+                Blog
             </x-responsive-nav-link>
             @auth
                 <x-responsive-nav-link href="{{ route('venues.create') }}" :active="request()->routeIs('venues.create')">

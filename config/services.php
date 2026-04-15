@@ -44,4 +44,10 @@ return [
         'secret_key' => env('TURNSTILE_SECRET_KEY'),
     ],
 
+    'wordpress' => [
+        'api_url'  => env('WORDPRESS_API_URL'),
+        'user'     => env('WORDPRESS_API_USER'),
+        'password' => env('WORDPRESS_API_PASSWORD'),
+    ],
+
 ];
