@@ -1,7 +1,6 @@
 @php $pageTitle = strip_tags($post['title']['rendered']); @endphp
 <x-app-layout>
-    <x-app-layout>
-        <x-slot name="title">{{ $pageTitle }}</x-slot>
+    <x-slot name="title">{{ $pageTitle }}</x-slot>
     <x-slot name="description">{{ strip_tags(Str::limit($post['excerpt']['rendered'], 160)) }}</x-slot>
 
     @push('styles')
